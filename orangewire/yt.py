@@ -57,7 +57,8 @@ class YouTubeSearchResult:
                 'preferredquality': '0'
             }],
             'outtmpl': qualified_filename + '.%(ext)s',
-            'quiet': quiet
+            'quiet': quiet,
+            'verbose': not quiet
         }
         with youtube_dl.YoutubeDL(ytdl_opts) as ytdl:
             ytdl.download(['https://youtube.com/watch?v=' + self.token])

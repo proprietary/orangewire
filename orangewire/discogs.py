@@ -7,7 +7,7 @@ import requests
 from itertools import islice
 
 
-import yt
+from .yt import is_string_duration
 
 
 def clean_string(s):
@@ -169,7 +169,7 @@ class DiscogsSearcher:
         r = self.client.search(**kwargs)
         # Filter down to those where each track has a duration
         for master in islice(r, limit):
-            if all(yt.is_string_duration(track.duration) for track in master.tracklist):
+            if all(is_string_duration(track.duration) for track in master.tracklist):
                 ret.append(master)
         return ret
 

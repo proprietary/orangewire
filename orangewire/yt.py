@@ -10,7 +10,7 @@ import shutil
 import os
 
 
-from scraper import ScrapingError
+from .scraper import ScrapingError
 
 
 YOUTUBE_BAD_SELECTOR_MESSAGE = "Doesn't work anymore possibly because YouTube changed their layout"

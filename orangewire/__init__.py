@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import discogs_client
 import argparse
 import sys
@@ -5,8 +7,8 @@ from operator import attrgetter
 import pathlib
 
 
-import yt
-import discogs
+from .yt import *
+from .discogs import *
 
 
 def parse_int(s):
@@ -16,7 +18,7 @@ def parse_int(s):
         return None
 
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser(prog='orangewire',
                                      description='Download music from YouTube with proper tagging')
     parser.add_argument('--track-name', required=False, help='Search by track name. Must use either this or --album-name')
@@ -49,7 +51,7 @@ if __name__ == '__main__':
     yt_dl_queue = []
     if args['verbose']:
         print('-----\nSearching discogs.com…')
-    d = discogs.DiscogsSearcher(user_token=user_token)
+    d = DiscogsSearcher(user_token=user_token)
     if args.get('track_name') is not None and args.get('album_name') is not None:
         print('You can only either search by --track-name or --album-name but not both')
         sys.exit(1)
@@ -87,7 +89,7 @@ if __name__ == '__main__':
             while choice is None or choice < 0 or choice >= len(discogs_masters):
                 choice = input('Enter which album/EP/etc. to download [between %d and %d]: ' % (0, len(discogs_masters) - 1))
                 choice = parse_int(choice)
-        yt_dl_queue.extend(discogs.entries_from_master(discogs_masters[choice]))
+        yt_dl_queue.extend(entries_from_master(discogs_masters[choice]))
     else:
         print('You must search by one of either --track-name or --album-name')
         sys.exit(1)
@@ -98,12 +100,12 @@ if __name__ == '__main__':
         artists_str_truncated = ', '.join(discogs_entry.get_artists()[:3])
         if args['verbose']:
             print('\n\n-----\nSearching for %s - %s on YouTube (%d/%d)…' % (artists_str_truncated, discogs_entry.track.title, idx+1, len(yt_dl_queue)))
-        yt_results = yt.YouTubeSearch(artist=artists_str_truncated,
+        yt_results = YouTubeSearch(artist=artists_str_truncated,
                                       song_title=discogs_entry.track.title)
         if len(yt_results.results) == 0:
             print('Not found on YouTube')
             sys.exit(0)
-        prediction = yt_results.most_likely_result(ground_truth_duration=yt.parse_string_duration(discogs_entry.track.duration))
+        prediction = yt_results.most_likely_result(ground_truth_duration=parse_string_duration(discogs_entry.track.duration))
         if args['verbose']:
             print('-----\nDownloading %s - %s from YouTube (watch?v=%s) (%d/%d)…' % (artists_str_truncated, discogs_entry.track.title, prediction.token, idx+1, len(yt_dl_queue)))
         filename = prediction.dl(output_directory=args['output_directory'], quiet=not args['verbose'])

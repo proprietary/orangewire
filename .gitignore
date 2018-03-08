@@ -1,9 +1,6 @@
+venv/*
 __pycache__/*
-bin/*
-etc/*
-include/*
-lib/*
-share/*
-lib64
-pyvenv.cfg
-pip-selfcheck.json
+orangewire/__pycache__/*
+orangewire.egg-info/*
+build/*
+dist/*

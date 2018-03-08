@@ -7,18 +7,18 @@ Downloads music from YouTube with ID3 tags and cover art provided by discogs.com
 ## Download a track
 
 ```bash
-python orangewire --user-token ********** --track-name "music is math" --artist-name "boards of canada"
+$ python3 orangewire --user-token ********** --track-name "music is math" --artist-name "boards of canada"
 ```
 
-!(example of result of track downloading in Windows)[https://i.imgur.com/l8cykHy.png]
+![example of result of track downloading in Windows](https://i.imgur.com/l8cykHy.png)
 
 ## Download a whole album
 
 ```bash
-./bin/python3 __main__.py --album-name "damn" --artist-name "kendrick lamar" --output-directory "../Kendrick Lamar - DAMN"
+$ python3 orangewire --album-name "damn" --artist-name "kendrick lamar" --output-directory "../Kendrick Lamar - DAMN"
 ```
 
-!(example of result of downloading an album in Windows)[https://i.imgur.com/kzlrsiA.png]
+![example of result of downloading an album in Windows](https://i.imgur.com/kzlrsiA.png)
 
 # Usage
 
@@ -27,6 +27,16 @@ python orangewire --user-token ********** --track-name "music is math" --artist-
 ## 2. Get a "user token"
 
 https://www.discogs.com/settings/developers
+
+## 3. Install dependencies
+
+## 4. Install orangewire
+
+```bash
+$ git clone https://github.com/zebradeltasavage/orangewire
+$ cd orangewire
+$ pip3 install -r requirements.txt
+```
 
 # License
 

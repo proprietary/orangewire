@@ -4,3 +4,12 @@ orangewire/__pycache__/*
 orangewire.egg-info/*
 build/*
 dist/*
+
+bin/*
+etc/*
+include/*
+lib/*
+lib64
+pip-selfcheck.json
+pyvenv.cfg
+share/*

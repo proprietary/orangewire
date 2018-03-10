@@ -23,7 +23,7 @@ $ orangewire --user-token ********** --track-name "music is math" --artist-name 
 
 ![example of result of track downloading in Windows](https://i.imgur.com/l8cykHy.png)
 
-N.B.: By default, this command produces no output if there are no errors or no further input required from you. To view progress, pass ``--verbose``. Otherwise, it will take up to 2 minutes on an average laptop before it exits (it's unoptimized Python).
+N.B.: By default, this command produces no output if there are no errors or no further input required from you. To view progress, pass ``--verbose``. Otherwise, it will take up to 2 minutes on an average laptop before it exits (the bottleneck is youtube-dl which drives a lot of network requests and calls to ffmpeg).
 
 ## Download a whole album
 
@@ -63,9 +63,19 @@ https://www.discogs.com/settings/developers
 4. Runs youtube-dl to convert the song(s) to MP3s.
 5. Adds ID3 tags for artist, track name, album/cover art, etc. using the metadata from discogs.com.
 
+# TODO
+
+## Add a way to cross reference Wikipedia for more authoritative song information, where possible
+
+## Train some classifier network to find the correct song metadata out of search results
+
+## Implement the reverse operation: Find song metadata from YouTube video
+
 # Legal
 
-orangewire is a thin convenience wrapper around youtube-dl. In itself, it does not download any media files. Without youtube-dl—a completely separate project—, this program would be useless.
+orangewire is a thin convenience wrapper around youtube-dl—without youtube-dl—a completely separate project—, this program wouldn't run. In itself, orangewire does not download, transfer, host, or share any media files. It only intends to use content from a site based on user submissions (YouTube) that is considered to be compliant with IP laws. Thus this program isn't subject to DMCA or other IP laws.
+
+The author has no liability for any copyright infringement you commit with this program.
 
 # License
 

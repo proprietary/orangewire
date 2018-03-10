@@ -17,13 +17,13 @@ def clean_string(s):
 
 
 class DiscogsEntry:
-    def __init__(self, master, track):
-        self.master = master
+    def __init__(self, track, release):
+        self.release = release
         self.track = track
 
 
     def get_artists(self):
-        artists = list(map(attrgetter('name'), self.master.main_release.artists))
+        artists = list(map(attrgetter('name'), self.release.artists))
         if hasattr(self.track, 'extraartists'):
             extra = set(map(attrgetter('name'), self.track.extraartists))
             artists.extend(extra.difference(artists))
@@ -31,15 +31,15 @@ class DiscogsEntry:
 
 
     def get_release_title(self):
-        return self.master.title
+        return self.release.title
 
 
     def get_genres(self):
-        return self.master.genres
+        return self.release.genres
 
 
     def get_labels(self):
-        return map(attrgetter('name'), self.master.main_release.labels)
+        return map(attrgetter('name'), self.release.labels)
 
 
     # def get_released_date(self):
@@ -48,11 +48,11 @@ class DiscogsEntry:
 
 
     def get_year(self):
-        return str(self.master.main_release.year)
+        return str(self.release.year)
 
 
     def get_album_art_url(self):
-        return self.master.main_release.images[0]['resource_url'] if len(self.master.main_release.images) > 0 else None
+        return self.release.images[0]['resource_url'] if len(self.release.images) > 0 else None
 
 
     def __str__(self):
@@ -127,10 +127,9 @@ class DiscogsSearcher:
         self.client = discogs_client.Client('orangewire/0.1', user_token=user_token)
 
 
-    def by_track(self, track_name, min_words_in_common=0.7, limit=20, **kwargs):
+    def _by_track(self, track_name, min_words_in_common=0.7, limit=20, **kwargs):
         ret = []
 
-        kwargs['type'] = 'master'
         kwargs['track'] = track_name
         # kwargs implicitly includes 'artist' etc.
 
@@ -152,10 +151,21 @@ class DiscogsSearcher:
                 # that advanced.
                 score = len(set.intersection(queryv, titlev))/min(len(titlev), len(queryv))
                 if score >= min_words_in_common:
-                    entry = DiscogsEntry(master=master, track=track)
+                    entry = DiscogsEntry(track=track,
+                                         release=master if kwargs.get('type') == 'release' else master.main_release)
                     ret.append(entry)
 
         return ret
+
+
+    def by_track(self, track_name, limit=20, min_words_in_common=20, **kwargs):
+        # Try searching for 'masters' only if possible
+        masters = self._by_track(track_name, limit=limit, min_words_in_common=min_words_in_common, type='master', **kwargs)
+        # Resort to searching for 'release' if no 'master' available (often happens for brand new songs)
+        if len(masters) > 0:
+            return masters
+        releases = self._by_track(track_name, limit=limit, min_words_in_common=.1, type='release', **kwargs)
+        return releases
 
 
     def by_album(self, album_name, limit=30, **kwargs):
